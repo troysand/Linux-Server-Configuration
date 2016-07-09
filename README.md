@@ -129,9 +129,9 @@ I used the ```createuser``` to create a database user called catalog:
 createuser --interactive
 ```
 In this interactive program I answered 'n' to every question about the new user's privileges.
-    - Shall the new role be a superuser? n
-    - Shall the new role be allowed to create databases? n
-    - Shall the new role be allowed to create more new roles? n
+- Shall the new role be a superuser? n
+- Shall the new role be allowed to create databases? n
+- Shall the new role be allowed to create more new roles? n
 Then I gave the new catalog user a password and created the catalog database:
 ```
 psql postgres
