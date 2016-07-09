@@ -69,22 +69,26 @@ I copied the file ```authorized_keys``` from the ```/root/.ssh``` directory into
 ### Software Updates
 To make sure I had the latest versions of everything installed on the server, I performed the following two commands:
 
-```apt-get upgrade
+```
+apt-get upgrade
 apt-get update
 ```
 
 ### SSH Configuration
 Next, I changed the SSH configuration by editing ```/etc/ssh/sshd_config``` and changing the entry ```Port 22``` to ```Port 2200```. I also disallowed root login by editing a line to read: ```PermitRootLogin no```. I restarted the ssh server:
-```service ssh restart
+```
+service ssh restart
 ```
 
 When I logged back into the server, I had to use the following command:
-```ssh -i ~/.ssh/udacity_key.rsa -p 2200 grader@52.35.4.119
+```
+ssh -i ~/.ssh/udacity_key.rsa -p 2200 grader@52.35.4.119
 ```
 
 ### Uncomplicated Firewall
 Next, I configured the Uncomplicated Firewall to only allow incoming connections for SSH, HTTP, and NTP:
-```sudo ufw default deny incoming
+```
+sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow 2200/tcp
 sudo ufw allow www
@@ -94,14 +98,16 @@ sudo ufw enable
 
 ### Time Zone
 The server time zone was already set to UTC, but I configured it again anyway with the following command:
-```dpkg-reconfigure tzdata
+```
+dpkg-reconfigure tzdata
 ```
 
 With that command I was able to select UTC from a menu.
 
 ### New Software
 I then performed a bunch of software installation operations to get Apache, PostgreSQL, Git and all of the Python modules installed.
-```apt-get install apache2
+```
+apt-get install apache2
 apt-get install libapache2-mod-wsgi
 apt-get install postgresql
 apt-get install postgresql-contrib
@@ -115,17 +121,20 @@ apt-get install python-oauth2client
 
 ### Configuring PostgreSQL
 I logged into the ```postqres``` user to configure PostgreSQL for the Catalog App.
-```sudo -i -u postgres
+```
+sudo -i -u postgres
 ```
 I used the ```createuser``` to create a database user called catalog:
-```createuser --interactive
+```
+createuser --interactive
 ```
 In this interactive program I answered 'n' to every question about the new user's privileges.
     - Shall the new role be a superuser? n
     - Shall the new role be allowed to create databases? n
     - Shall the new role be allowed to create more new roles? n
 Then I gave the new catalog user a password and created the catalog database:
-```psql postgres
+```
+psql postgres
 postgres=# \password catalog
 postgres=# CREATE DATABASE catalog
 postgres=# \q
@@ -133,7 +142,8 @@ postgres=# \q
 
 ### Installing and Editing the Catalog App
 Next, I cloned the Catalog App from the github repository at ```/var/www/catalog```:
-```cd /var/www
+```
+cd /var/www
 git clone http://github.com/troysand/catalog.git
 ```
 
@@ -155,14 +165,16 @@ if __name__ == "__main__":
 ```
 
 To create and populate the database for my catalog application, I ran the following python programs:
-```cd /var/www/catalog
+```
+cd /var/www/catalog
 python catalog_db_setup.py
 python create_categories.py
 ```
 
 ### Configuring Apache
 To configure Apache to serve my Catalog App as a WSGI application, I had to edit the ```/etc/apache2/sites-available/000-default.conf``` file. I created the following line:
-```WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+```
+WSGIScriptAlias / /var/www/catalog/catalog.wsgi
 ```
 
 ## Resources
